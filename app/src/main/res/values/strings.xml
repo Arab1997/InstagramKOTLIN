@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">Instagram</string>
+
+    <!-- facebook In -->
+    <string name="facebook_app_id">265383251185172</string>
+    <string name="fb_login_protocol_scheme">fb265383251185172</string>
+
+    <string name="com.twitter.sdk.android.CONSUMER_KEY">0lY6xdMc8l3Bgkdep8DvfPxe4</string>
+    <string name="com.twitter.sdk.android.CONSUMER_SECRET">2Uov8wp8sQWccy1oRRes7Q3VgWfsTE1tokYHblse9TTaF0BW1b</string>
+
+    <!-- Sign In -->
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="signin_email">Signup or Signin by email</string>
+    <string name="signin_google">Google</string>
+    <string name="signin_facebook">Facebook</string>
+    <string name="signin_twitter">Twitter</string>
+    <string name="signup_complete"></string>
+    <string name="signin_complete"></string>
+    <string name="signout">signoutt</string>
+    <string name="signout_success">signout_success</string>
+    <string name="signout_fail">signout_fail</string>
+    <string name="signout_fail_null">signout</string>
+
+    <!-- Bottom Navigation View -->
+    <string name="home">home</string>
+    <string name="search">Search</string>
+    <string name="gallery">Gallery</string>
+    <string name="favorite">Favorite</string>
+    <string name="account">Account</string>
+
+    <!-- Account -->
+    <string name="post"></string>
+    <string name="following"></string>
+    <string name="follower"></string>
+    <string name="follow"></string>
+    <string name="follow_cancel"></string>
+    <string name="profile">Profile</string>
+    <string name="count_0">0</string>
+
+    <!-- Alarm -->
+    <string name="alarm_favorite">1.</string>
+    <string name="alarm_who">2&#160;</string>
+    <string name="alarm_comment">3&#160;.</string>
+    <string name="alarm_follow">4.</string>
+
+    <!-- Comment -->
+    <string name="send">send</string>
+
+    <!-- Add Photo -->
+    <string name="upload_image">upload_image</string>
+    <string name="hint_image_content">hint_image_content</string>
+    <string name="upload_success">upload_success</string>
+    <string name="upload_fail">upload_fail</string>
+
+    <!-- Toolbar -->
+    <string name="back">Back</string>
+
+    <!-- etc -->
+    <item name="visible" type="id" />
+    <item name="masked" type="id" />
+</resources>
+
