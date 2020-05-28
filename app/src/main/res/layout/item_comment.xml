@@ -16,10 +16,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="7.5dp"
         android:textStyle="bold"
-        tools:text="유저 아이디" />
+        tools:text="UserId" />
     <TextView
         android:id="@+id/commentviewitem_textview_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="메세지 입니다" />
+        tools:text="Message" />
 </LinearLayout>
