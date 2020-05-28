@@ -3,6 +3,7 @@ package com.company.howl.howlstagram.navigation
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,16 +14,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Glide.init
 import com.bumptech.glide.request.RequestOptions
+import com.company.howl.howlstagram.model.AlarmDTO
 import com.company.howl.howlstagram.model.ContentDTO
+import com.google.api.Billing
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_detail.view.*
 import myway.myapplication.MainActivity
 import myway.myapplication.R
+import myway.myapplication.navigation.CommentActivity
 import okhttp3.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -48,7 +53,7 @@ class DetailViewFragment : Fragment() {
         return view
     }
 
-    inner class DeatailViewRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    inner class DetailViewRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
         var contentUidList: ArrayList<String> = arrayListOf()
 
@@ -113,12 +118,22 @@ class DetailViewFragment : Fragment() {
             viewHolder.detailviewitem_profile_textview.setOnClickListener {
                 var fragment = UserFragment()
                 var bundle = Bundle()
-                bundle.putString("destinationUid",  contentDTOs[position].uid)
-                bundle.putString("userId",  contentDTOs[position].userId)
+                bundle.putString("destinationUid", contentDTOs[position].uid)
+                bundle.putString("userId", contentDTOs[position].userId)
                 fragment.arguments = bundle
-                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_content, fragment)?.commit()
+                activity?.supportFragmentManager?.beginTransaction()
+                    ?.replace(R.id.main_content, fragment)?.commit()
+            }
+            viewHolder.detailviewitem_comment_imageview.setOnClickListener { v ->
+
+                var intent = Intent(v.context, CommentActivity::class.java)
+                intent.putExtra("contentUid", contentUidList[position])
+                intent.putExtra("destinationUid", contentDTOs[position].uid)
+                startActivity(intent)
+
             }
         }
+
 
         fun favouriteEvent(position: Int) {
             var tsDoc = firestore?.collection("images")?.document(contentUidList[position])
@@ -128,18 +143,29 @@ class DetailViewFragment : Fragment() {
                 var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
 
                 if (contentDTO!!.favorites.containsKey(uid)) {
-              //when the button is clicked
+                    //when the button is clicked
                     contentDTO?.favoriteCount = contentDTO?.favoriteCount - 1
                     contentDTO?.favorites.remove(uid)
                 } else {
-             //when the button is not clicked
+                    //when the button is not clicked
                     contentDTO?.favoriteCount = contentDTO?.favoriteCount + 1
                     contentDTO?.favorites[uid!!] = true
+                    favouriteAlarm(contentDTOs[position].uid!!)
                 }
                 transaction.set(tsDoc, contentDTO)
             }
 
 
+        }
+
+        fun favouriteAlarm(destinationUid: String) {
+            var alarmDTO = AlarmDTO()
+            alarmDTO.destinationUid = destinationUid
+            alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+            alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+            alarmDTO.kind = 0
+            alarmDTO.timestamp = System.currentTimeMillis()
+            FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
         }
     }
 

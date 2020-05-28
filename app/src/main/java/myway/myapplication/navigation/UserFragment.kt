@@ -1,6 +1,7 @@
 package com.company.howl.howlstagram.navigation
 
 
+import android.content.ClipDescription
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.company.howl.howlstagram.model.AlarmDTO
 import com.company.howl.howlstagram.model.ContentDTO
 import com.company.howl.howlstagram.model.FollowDTO
 import com.google.firebase.auth.FirebaseAuth
@@ -165,6 +167,7 @@ class UserFragment : Fragment() {
                 followDTO!!.followerCount = 1
                 followDTO!!.followers[currentUserUid!!] = true
 
+                followerAlarm(uid!!)
                 transaction.set(tsDocFollower, followDTO!!)
                 return@runTransaction
             }
@@ -177,6 +180,7 @@ class UserFragment : Fragment() {
                 //It add my follower when I dont  follow  a  third  person
                 followDTO!!.followerCount = followDTO!!.followerCount + 1
                 followDTO!!.followers[currentUserUid!!] = true
+                followerAlarm(uid!!)
             }
             transaction.set(tsDocFollower, followDTO!!)
             return@runTransaction
@@ -184,6 +188,16 @@ class UserFragment : Fragment() {
         }
     }
 
+
+    fun followerAlarm(destinationUid :String){
+        var alarmDTO = AlarmDTO()
+        alarmDTO.destinationUid = destinationUid
+        alarmDTO.userId = auth?.currentUser?.email
+        alarmDTO.uid = auth?.currentUser?.uid
+        alarmDTO.kind = 2
+        alarmDTO.timestamp =System.currentTimeMillis()
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+    }
     fun getProfileImage() {
         firestore?.collection("profileImages")?.document(uid!!)
             ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
@@ -195,6 +209,8 @@ class UserFragment : Fragment() {
                 }
             }
     }
+
+
 
     inner class UserFragmentRecyclerViewAdapter :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
