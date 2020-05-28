@@ -3,8 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <view class="androidx.appcompat.app.AlertController$RecycleListView"
-        android:id="@+id/detailviewfragment_recyclerview"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/detailViewFragment_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

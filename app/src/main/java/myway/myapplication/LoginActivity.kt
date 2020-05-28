@@ -70,6 +70,10 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        moveMainPage(auth?.currentUser)
+    }
     //Hash Key: EpU73BEd62MzAEwPsCLyvxmc/CA=
     fun printHashKey() {
         try {
@@ -196,6 +200,7 @@ class LoginActivity : AppCompatActivity() {
     fun moveMainPage(user: FirebaseUser?) {
         if (user != null) {
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 }
