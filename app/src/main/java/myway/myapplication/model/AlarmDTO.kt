@@ -1,4 +1,4 @@
-package com.company.howl.howlstagram.model
+package myway.myapplication.model
 
 data class AlarmDTO (
         var destinationUid: String? = null,

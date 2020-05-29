@@ -10,9 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.company.howl.howlstagram.model.AlarmDTO
-import com.company.howl.howlstagram.model.ContentDTO
-import com.company.howl.howlstagram.navigation.UserFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -21,6 +18,8 @@ import kotlinx.android.synthetic.main.activity_comment.view.*
 import kotlinx.android.synthetic.main.item_comment.view.*
 import kotlinx.android.synthetic.main.item_detail.view.*
 import myway.myapplication.R
+import myway.myapplication.model.AlarmDTO
+import myway.myapplication.model.ContentDTO
 
 class CommentActivity : AppCompatActivity() {
 

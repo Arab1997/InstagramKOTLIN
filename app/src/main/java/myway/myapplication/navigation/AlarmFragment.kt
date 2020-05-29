@@ -1,4 +1,4 @@
-package com.company.howl.howlstagram.navigation
+package myway.myapplication.navigation
 
 
 import android.content.Intent

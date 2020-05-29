@@ -1,4 +1,4 @@
-package com.company.howl.howlstagram.model
+package myway.myapplication.model
 
 data class PushDTO(var to: String? = null,
                    var notification: Notification? = Notification()) {

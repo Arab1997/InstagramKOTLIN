@@ -1,4 +1,4 @@
-package com.company.howl.howlstagram.navigation
+package myway.myapplication.navigation
 
 
 import android.content.ClipDescription
@@ -20,9 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.company.howl.howlstagram.model.AlarmDTO
-import com.company.howl.howlstagram.model.ContentDTO
-import com.company.howl.howlstagram.model.FollowDTO
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -36,6 +33,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlinx.android.synthetic.main.fragment_user.view.*
 import myway.myapplication.LoginActivity
+import myway.myapplication.model.AlarmDTO
+import myway.myapplication.model.ContentDTO
+import myway.myapplication.model.FollowDTO
 
 
 class UserFragment : Fragment() {
@@ -76,13 +76,13 @@ class UserFragment : Fragment() {
             //Other user
             fragmentView?.account_btn_follow_signout?.text = getString(R.string.follow)
             var mainactivity = (activity as MainActivity)
-            mainactivity?.toolbar_username?.text = arguments?.getString("userId")
-            mainactivity?.toolbar_btn_back?.setOnClickListener {
+            mainactivity.toolbar_username?.text = arguments?.getString("userId")
+            mainactivity.toolbar_btn_back?.setOnClickListener {
                 mainactivity.bottom_navigation.selectedItemId = R.id.action_home
             }
-            mainactivity?.toolbar_title_image?.visibility = View.GONE
-            mainactivity?.toolbar_username?.visibility = View.VISIBLE
-            mainactivity?.toolbar_btn_back?.visibility = View.VISIBLE
+            mainactivity.toolbar_title_image?.visibility = View.GONE
+            mainactivity.toolbar_username?.visibility = View.VISIBLE
+            mainactivity.toolbar_btn_back?.visibility = View.VISIBLE
             fragmentView?.account_btn_follow_signout?.setOnClickListener { requestFolloow() }
         }
         fragmentView?.account_recyclerview?.adapter = UserFragmentRecyclerViewAdapter()
@@ -105,13 +105,13 @@ class UserFragment : Fragment() {
                 var followDTO = documentSnapshot.toObject(FollowDTO::class.java)
                 if (followDTO?.followingCount != null) {
                     fragmentView?.account_tv_following_count?.text =
-                        followDTO?.followingCount?.toString()
+                        followDTO.followingCount.toString()
                 }
 
                 if (followDTO?.followerCount != null) {
                     fragmentView?.account_tv_follower_count?.text =
-                        followDTO?.followerCount?.toString()
-                    if (followDTO?.followers?.containsKey(currentUserUid!!)) {
+                        followDTO.followerCount.toString()
+                    if (followDTO.followers.containsKey(currentUserUid!!)) {
                         fragmentView?.account_btn_follow_signout?.text =
                             getString(R.string.follow_cancel)
                         fragmentView?.account_btn_follow_signout?.background?.setColorFilter(
@@ -137,8 +137,8 @@ class UserFragment : Fragment() {
             var followDTO = transaction.get(tsDocFollowing!!).toObject(FollowDTO::class.java)
             if (followDTO == null) {
                 followDTO = FollowDTO()
-                followDTO!!.followerCount = 1
-                followDTO!!.followers[uid!!] = true
+                followDTO.followerCount = 1
+                followDTO.followers[uid!!] = true
 
                 transaction.set(tsDocFollowing, followDTO)
                 return@runTransaction
@@ -147,11 +147,11 @@ class UserFragment : Fragment() {
 
             if (followDTO.followings.containsKey(uid)) {
                 //It remove follow ing third person  when  a  third  person  follow me
-                followDTO?.followerCount = followDTO?.followerCount - 1
-                followDTO.followers?.remove(uid)
+                followDTO.followerCount = followDTO.followerCount - 1
+                followDTO.followers.remove(uid)
             } else {
                 //It add follow ing third person  when  a  third  person dont  follow me
-                followDTO?.followerCount = followDTO?.followerCount + 1
+                followDTO.followerCount = followDTO.followerCount + 1
                 followDTO.followers[uid!!] = true
             }
             transaction.set(tsDocFollowing, followDTO)
@@ -203,7 +203,7 @@ class UserFragment : Fragment() {
             ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                 if (documentSnapshot == null) return@addSnapshotListener
                 if (documentSnapshot.data != null) {
-                    var url = documentSnapshot?.data!!["image"]
+                    var url = documentSnapshot.data!!["image"]
                     Glide.with(activity!!).load(url).apply(RequestOptions().circleCrop())
                         .into(fragmentView?.account_iv_profile!!)
                 }

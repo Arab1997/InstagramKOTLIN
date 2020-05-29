@@ -1,4 +1,4 @@
-package com.company.howl.howlstagram.navigation
+package myway.myapplication.navigation
 
 
 import android.content.Intent
@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Glide.init
 import com.bumptech.glide.request.RequestOptions
-import com.company.howl.howlstagram.model.AlarmDTO
-import com.company.howl.howlstagram.model.ContentDTO
 import com.google.api.Billing
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -27,6 +25,8 @@ import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_detail.view.*
 import myway.myapplication.MainActivity
 import myway.myapplication.R
+import myway.myapplication.model.AlarmDTO
+import myway.myapplication.model.ContentDTO
 import myway.myapplication.navigation.CommentActivity
 import okhttp3.*
 import java.util.*

@@ -1,5 +1,4 @@
-package com.company.howl.howlstagram.model
-
+package myway.myapplication.model
 import java.util.HashMap
 
 data class FollowDTO(
