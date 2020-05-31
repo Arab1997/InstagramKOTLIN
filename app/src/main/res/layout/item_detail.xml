@@ -11,12 +11,13 @@
         android:layout_height="50dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/detailviewitem_profile_image"
-            android:layout_width="35dp"
+            android:layout_width="27dp"
             android:layout_height="35dp"
-            android:layout_margin="7.5dp"
-            tools:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_launcher"
+            android:layout_margin="7.5dp" />
         <TextView
             android:id="@+id/detailviewitem_profile_textview"
             android:layout_width="wrap_content"
@@ -27,9 +28,10 @@
     <ImageView
         android:id="@+id/detailviewitem_imageview_content"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:scaleType="fitXY"
-        android:src="@color/com_facebook_blue" />
+        android:layout_height="354dp"
+        android:adjustViewBounds="false"
+        android:scaleType="center"
+        android:src="@drawable/instagram" />
 
     <!-- favorite & comment -->
     <LinearLayout
@@ -41,7 +43,7 @@
             android:id="@+id/detailviewitem_favorite_imageview"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            app:srcCompat="@drawable/ic_favorite_border" />
+            android:src="@drawable/ic_favourite_border" />
 
         <ImageView
             android:id="@+id/detailviewitem_comment_imageview"

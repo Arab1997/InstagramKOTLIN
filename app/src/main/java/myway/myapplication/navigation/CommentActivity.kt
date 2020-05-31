@@ -28,11 +28,11 @@ class CommentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comment)
+        contentUid = intent.getStringExtra("contentUid")
 
         comment_recyclerview.adapter = CommentRecyclerviewAdapter()
         comment_recyclerview.layoutManager = LinearLayoutManager(this)
 
-        contentUid = intent.getStringExtra("contentUid")
         comment_btn_send?.setOnClickListener {
             var comment = ContentDTO.Comment()
             comment.userId = FirebaseAuth.getInstance().currentUser?.email
@@ -81,7 +81,7 @@ class CommentActivity : AppCompatActivity() {
 
 
         override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
-            var view = LayoutInflater.from(p0.context).inflate(R.layout.item_detail, p0, false)
+            var view = LayoutInflater.from(p0.context).inflate(R.layout.item_comment, p0, false)
             return CustomViewHolder(view)
         }
 

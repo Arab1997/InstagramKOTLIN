@@ -1,6 +1,7 @@
 package myway.myapplication.navigation
 
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Message
@@ -29,6 +30,7 @@ import myway.myapplication.model.AlarmDTO
 import myway.myapplication.model.ContentDTO
 import myway.myapplication.navigation.CommentActivity
 import okhttp3.*
+import org.w3c.dom.Comment
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -48,7 +50,9 @@ class DetailViewFragment : Fragment() {
 
         firestore = FirebaseFirestore.getInstance()
         uid = FirebaseAuth.getInstance().currentUser?.uid
-        view.detailViewFragment_recyclerview.adapter
+
+
+        view.detailViewFragment_recyclerview.adapter = DetailViewRecyclerViewAdapter()
         view.detailViewFragment_recyclerview.layoutManager = LinearLayoutManager(activity)
         return view
     }
@@ -60,14 +64,14 @@ class DetailViewFragment : Fragment() {
 
         init {
             firestore?.collection("images")?.orderBy("timestamp")
-                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                ?.addSnapshotListener { querySnapshot, _ ->
                     contentDTOs.clear()
                     contentUidList.clear()
 
                     //Sometimes this Code return null of querySnapshot  when it signout
                     if (querySnapshot == null) return@addSnapshotListener
 
-                    for (snapshot in querySnapshot!!.documents) {
+                    for (snapshot in querySnapshot.documents) {
                         var items = snapshot.toObject(ContentDTO::class.java)
                         contentDTOs.add(items!!)
                         contentUidList.add(snapshot.id)
@@ -87,19 +91,20 @@ class DetailViewFragment : Fragment() {
             return contentDTOs.size
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(p0: RecyclerView.ViewHolder, position: Int) {
             var viewHolder = (p0 as CustomViewHolder).itemView
 
             //User id
-            viewHolder.detailviewitem_profile_textview.text = contentDTOs!![position].userId
+            viewHolder.detailviewitem_profile_textview.text = contentDTOs[position].userId
             //image
-            Glide.with(p0.itemView.context).load(contentDTOs!![position].imageUrl)
+            Glide.with(p0.itemView.context).load(contentDTOs[position].imageUrl)
                 .into(viewHolder.detailviewitem_imageview_content)
             //Explain of content
-            viewHolder.detailviewitem_explain_textview.text = contentDTOs!![position].explain
+            viewHolder.detailviewitem_explain_textview.text = contentDTOs[position].explain
             //likes
             viewHolder.detailviewitem_favoritecounter_textview.text =
-                "Likes " + contentDTOs!![position].favoriteCount
+                "Likes " + contentDTOs[position].favoriteCount
 
             //This code is when  the button is clicked
             viewHolder.detailviewitem_favorite_imageview.setOnClickListener {
@@ -107,9 +112,9 @@ class DetailViewFragment : Fragment() {
             }
 
             // This code is when  the  page  is   loaded
-            if (contentDTOs!![position].favorites.containsKey(uid)) {
+            if (contentDTOs[position].favorites.containsKey(uid)) {
                 //this is like  status
-                viewHolder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite)
+                viewHolder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favourite)
             } else {
                 //this is unlike status
                 viewHolder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favourite_border)
@@ -132,6 +137,12 @@ class DetailViewFragment : Fragment() {
                 startActivity(intent)
 
             }
+
+            viewHolder.detailviewitem_comment_imageview.setOnClickListener { v ->
+                var intent  = Intent(v.context, CommentActivity::class.java)
+                intent.putExtra("contentUid",contentUidList[position] )
+                startActivity(intent)
+            }
         }
 
 
@@ -144,12 +155,12 @@ class DetailViewFragment : Fragment() {
 
                 if (contentDTO!!.favorites.containsKey(uid)) {
                     //when the button is clicked
-                    contentDTO?.favoriteCount = contentDTO?.favoriteCount - 1
-                    contentDTO?.favorites.remove(uid)
+                    contentDTO.favoriteCount = contentDTO.favoriteCount - 1
+                    contentDTO.favorites.remove(uid)
                 } else {
                     //when the button is not clicked
-                    contentDTO?.favoriteCount = contentDTO?.favoriteCount + 1
-                    contentDTO?.favorites[uid!!] = true
+                    contentDTO.favoriteCount = contentDTO.favoriteCount + 1
+                    contentDTO.favorites[uid!!] = true
                     favouriteAlarm(contentDTOs[position].uid!!)
                 }
                 transaction.set(tsDoc, contentDTO)

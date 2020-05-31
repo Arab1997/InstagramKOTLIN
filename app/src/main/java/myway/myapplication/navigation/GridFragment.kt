@@ -31,9 +31,9 @@ class GridFragment : Fragment() {
     var fragmentView: View? = null
     var firestore: FirebaseFirestore? = null
 
-    var auth: FirebaseAuth? = null
+/*    var auth: FirebaseAuth? = null
     var imagesSnapshot: ListenerRegistration? = null
-    var currentUserUid: String? = null
+    var currentUserUid: String? = null*/
 
 
     override fun onCreateView(

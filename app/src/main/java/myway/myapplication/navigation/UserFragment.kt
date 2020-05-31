@@ -119,10 +119,9 @@ class UserFragment : Fragment() {
                             PorterDuff.Mode.MULTIPLY
                         )
                     } else {
-                        fragmentView?.account_btn_follow_signout?.text = getString(R.string.follow)
                         if (uid != currentUserUid) {
-                            fragmentView?.account_btn_follow_signout?.text =
-                                getString(R.string.follow)
+
+                            fragmentView?.account_btn_follow_signout?.text = getString(R.string.follow)
                             fragmentView?.account_btn_follow_signout?.background?.colorFilter = null
                         }
                     }
