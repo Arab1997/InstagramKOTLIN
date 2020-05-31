@@ -72,7 +72,7 @@ class CommentActivity : AppCompatActivity() {
                     comments.clear()
                     if (querySnapshot == null) return@addSnapshotListener
 
-                    for (snapshot in querySnapshot.documents!!) {
+                    for (snapshot in querySnapshot.documents) {
                         comments.add(snapshot.toObject(ContentDTO.Comment::class.java)!!)
                     }
                     notifyDataSetChanged()
