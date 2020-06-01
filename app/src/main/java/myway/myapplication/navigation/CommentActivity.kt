@@ -13,6 +13,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.okhttp.internal.Internal.instance
+import io.grpc.InternalChannelz.instance
+import io.grpc.util.TransmitStatusRuntimeExceptionInterceptor.instance
 import kotlinx.android.synthetic.main.activity_comment.*
 import kotlinx.android.synthetic.main.activity_comment.view.*
 import kotlinx.android.synthetic.main.item_comment.view.*
@@ -20,15 +23,18 @@ import kotlinx.android.synthetic.main.item_detail.view.*
 import myway.myapplication.R
 import myway.myapplication.model.AlarmDTO
 import myway.myapplication.model.ContentDTO
+import myway.myapplication.util.FcmPush
 
 class CommentActivity : AppCompatActivity() {
+    var contentUid : String? = null
+    var destinationUid : String? = null
 
-    var contentUid: String? = null
-    var destinationUid: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comment)
+
         contentUid = intent.getStringExtra("contentUid")
+        destinationUid = intent.getStringExtra("destinationUid")
 
         comment_recyclerview.adapter = CommentRecyclerviewAdapter()
         comment_recyclerview.layoutManager = LinearLayoutManager(this)
@@ -40,24 +46,25 @@ class CommentActivity : AppCompatActivity() {
             comment.comment = comment_edit_message.text.toString()
             comment.timestamp = System.currentTimeMillis()
 
-            FirebaseFirestore.getInstance().collection("images").document(contentUid!!)
-                .collection("comments").document().set(comment)
-
-            commentAlarm(destinationUid!!, comment_edit_message.text.toString())
+            FirebaseFirestore.getInstance().collection("images").document(contentUid!!).collection("comments").document().set(comment)
+            commentAlarm(destinationUid!!,comment_edit_message.text.toString())
             comment_edit_message.setText("")
         }
     }
 
-    fun commentAlarm(destinationUid: String, message: String) {
+    fun commentAlarm(destinationUid : String, message : String){
         var alarmDTO = AlarmDTO()
-        alarmDTO.destinationUid= destinationUid
+        alarmDTO.destinationUid = destinationUid
         alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+        alarmDTO.kind = 1
         alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
         alarmDTO.timestamp = System.currentTimeMillis()
         alarmDTO.message = message
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
-    }
 
+        var msg = FirebaseAuth.getInstance().currentUser?.email + " " + getString(R.string.alarm_comment) + " of " + message
+        FcmPush.instance.sendMessage(destinationUid,"Howlstagram",msg)
+    }
 
     inner class CommentRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
@@ -100,13 +107,12 @@ class CommentActivity : AppCompatActivity() {
                 .document(comments[position].uid!!)
                 .get()
                 .addOnCompleteListener { task ->
-                    if (task.isCanceled){
-                        var url  = task .result!!["image"]
+                    if(task.isSuccessful){
+                        var url = task.result!!["image"]
                         Glide.with(p0.itemView.context).load(url).apply(RequestOptions().circleCrop()).into(view.commentviewitem_imageview_profile)
+                    }
                 }
         }
 
-
     }
-}
 }

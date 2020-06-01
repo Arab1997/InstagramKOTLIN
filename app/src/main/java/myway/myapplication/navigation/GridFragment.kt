@@ -48,38 +48,30 @@ class GridFragment : Fragment() {
         return fragmentView
     }
 
-    inner class UserFragmentRecyclerViewAdapter :
-        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
-
+    inner class UserFragmentRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+        var contentDTOs : ArrayList<ContentDTO> = arrayListOf()
         init {
-            firestore?.collection("images")
-                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                    //Sometimes this Code return null of querySnapshot  when it signout
-                    if (querySnapshot == null) return@addSnapshotListener
+            firestore?.collection("images")?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                //Sometimes, This code return null of querySnapshot when it signout
+                if(querySnapshot == null) return@addSnapshotListener
 
-                    //get data
-                    for (snapshot in querySnapshot.documents) {
-                        contentDTOs.add(snapshot.toObject(ContentDTO::class.java)!!)
-                    }
-
-                    notifyDataSetChanged()
+                //Get data
+                for(snapshot in querySnapshot.documents){
+                    contentDTOs.add(snapshot.toObject(ContentDTO::class.java)!!)
                 }
+                notifyDataSetChanged()
+            }
         }
 
-        override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int
-        ): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
             var width = resources.displayMetrics.widthPixels / 3
 
-            var imageView = ImageView(parent.context)
-            imageView.layoutParams = LinearLayoutCompat.LayoutParams(width, width)
-            return CustomViewHolder(imageView)
+            var imageview = ImageView(p0.context)
+            imageview.layoutParams = LinearLayoutCompat.LayoutParams(width,width)
+            return CustomViewHolder(imageview)
         }
 
-        inner class CustomViewHolder(var imageView: ImageView) :
-            RecyclerView.ViewHolder(imageView) {
+        inner class CustomViewHolder(var imageview: ImageView) : RecyclerView.ViewHolder(imageview) {
 
         }
 
@@ -87,10 +79,10 @@ class GridFragment : Fragment() {
             return contentDTOs.size
         }
 
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            var imageView = (holder as CustomViewHolder).imageView
-            Glide.with(holder.itemView.context).load(contentDTOs[position].imageUrl)
-                .apply(RequestOptions().centerCrop()).into(imageView)
+        override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
+            var imageview = (p0 as CustomViewHolder).imageview
+            Glide.with(p0.itemView.context).load(contentDTOs[p1].imageUrl).apply(RequestOptions().centerCrop()).into(imageview)
         }
+
     }
 }

@@ -36,6 +36,7 @@ import myway.myapplication.LoginActivity
 import myway.myapplication.model.AlarmDTO
 import myway.myapplication.model.ContentDTO
 import myway.myapplication.model.FollowDTO
+import myway.myapplication.util.FcmPush
 
 
 class UserFragment : Fragment() {
@@ -170,7 +171,6 @@ class UserFragment : Fragment() {
                 transaction.set(tsDocFollower, followDTO!!)
                 return@runTransaction
             }
-
             if (followDTO!!.followers.containsKey(currentUserUid)) {
                 //It cancel my follower when I follow  a  third  person
                 followDTO!!.followerCount = followDTO!!.followerCount - 1
@@ -183,19 +183,20 @@ class UserFragment : Fragment() {
             }
             transaction.set(tsDocFollower, followDTO!!)
             return@runTransaction
-
         }
     }
-
-
     fun followerAlarm(destinationUid :String){
         var alarmDTO = AlarmDTO()
         alarmDTO.destinationUid = destinationUid
         alarmDTO.userId = auth?.currentUser?.email
         alarmDTO.uid = auth?.currentUser?.uid
         alarmDTO.kind = 2
-        alarmDTO.timestamp =System.currentTimeMillis()
+        alarmDTO.timestamp = System.currentTimeMillis()
+
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+        var message = auth?.currentUser?.email + getString(R.string.alarm_favorite)
+        FcmPush.instance.sendMessage(destinationUid,"Howlstagram",message)
     }
     fun getProfileImage() {
         firestore?.collection("profileImages")?.document(uid!!)
